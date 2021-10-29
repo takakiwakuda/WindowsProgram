@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
+using System.Text.RegularExpressions;
 using Microsoft.Win32;
 
 namespace WindowsProgram
@@ -68,7 +69,7 @@ namespace WindowsProgram
         private DateTime GetInstalledDate(RegistryKey key)
         {
             string datetime = (string)key.GetValue("InstallDate");
-            if (datetime == null)
+            if (datetime == null || !Regex.IsMatch(datetime, "^[0-9]{8}$"))
             {
                 return NativeMethod.GetLastWriteTime(key);
             }
@@ -77,7 +78,16 @@ namespace WindowsProgram
             int month = int.Parse(datetime.Substring(4, 2));
             int day = int.Parse(datetime.Substring(6, 2));
 
-            return new DateTime(year, month, day, 0, 0, 0, DateTimeKind.Local);
+            try
+            {
+                return new DateTime(year, month, day, 0, 0, 0, DateTimeKind.Local);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                WriteDebug($"Datetime {datetime} is in an invalid.");
+            }
+
+            return NativeMethod.GetLastWriteTime(key);
         }
     }
 
