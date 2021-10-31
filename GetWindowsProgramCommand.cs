@@ -17,10 +17,13 @@ namespace WindowsProgram
         protected override void ProcessRecord()
         {
             List<WindowsProgramInfo> infos = new();
-            infos.AddRange(GetPrograms(RegistryHive.CurrentUser, RegistryView.Registry64));
-            infos.AddRange(GetPrograms(RegistryHive.CurrentUser, RegistryView.Registry32));
-            infos.AddRange(GetPrograms(RegistryHive.LocalMachine, RegistryView.Registry64));
+            infos.AddRange(GetPrograms(RegistryHive.CurrentUser, RegistryView.Default));
             infos.AddRange(GetPrograms(RegistryHive.LocalMachine, RegistryView.Registry32));
+
+            if (Environment.Is64BitOperatingSystem)
+            {
+                infos.AddRange(GetPrograms(RegistryHive.LocalMachine, RegistryView.Registry64));
+            }
 
             WriteObject(infos.OrderBy(i => i.Name), true);
         }
