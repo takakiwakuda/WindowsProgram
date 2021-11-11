@@ -35,7 +35,12 @@ task Pack {
         New-Item -Path $output -ItemType Directory > $null
     }
 
-    Copy-Item -Path bin\$Configuration\$Framework\publish\WindowsProgram.* -Destination $output
+    $params = @{
+        Path        = "bin\$Configuration\$Framework\publish\WindowsProgram.*", "en-US", "ja-JP"
+        Destination = $output
+        Recurse     = $true
+    }
+    Copy-Item @params
 }
 
 task Test {

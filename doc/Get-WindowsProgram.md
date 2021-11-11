@@ -19,7 +19,7 @@ Get-WindowsProgram [<CommonParameters>]
 
 ## DESCRIPTION
 
-Retrieves installed programs on Windows.
+The `Get-WindowsProgram` cmdlet retrieves installed programs on Windows.
 
 ## EXAMPLES
 

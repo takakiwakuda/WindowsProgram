@@ -10,7 +10,7 @@
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Retrieves installed programs on Windows.</maml:para>
+      <maml:para>The `Get-WindowsProgram` cmdlet retrieves installed programs on Windows.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
