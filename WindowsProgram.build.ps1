@@ -6,9 +6,9 @@ param (
     $Configuration = "Debug",
 
     [Parameter()]
-    [ValidateSet("net5.0", "net462")]
+    [ValidateSet("net6.0", "net462")]
     [string]
-    $Framework = "net5.0"
+    $Framework = "net6.0"
 )
 
 task Build @{
@@ -20,7 +20,22 @@ task Build @{
 }
 
 task Clean {
-    remove bin, obj
+    remove bin, obj, out
 }
 
-task . Build
+task Pack {
+    $manifest = "bin\$Configuration\$Framework\WindowsProgram.psd1"
+    $version = (Import-PowerShellDataFile -LiteralPath $manifest).ModuleVersion
+    $output = "out\$Configuration\$Framework\WindowsProgram\$version"
+
+    if (Test-Path -LiteralPath $output -PathType Container) {
+        Remove-Item -Path $output\* -Recurse -Force
+    }
+    else {
+        New-Item -Path $output -ItemType Directory > $null
+    }
+
+    Copy-Item -Path bin\$Configuration\$Framework\publish\WindowsProgram.* -Destination $output
+}
+
+task . Build, Pack
