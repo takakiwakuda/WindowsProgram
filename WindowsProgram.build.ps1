@@ -38,4 +38,19 @@ task Pack {
     Copy-Item -Path bin\$Configuration\$Framework\publish\WindowsProgram.* -Destination $output
 }
 
+task Test {
+    $module = "$PSScriptRoot\out\$Configuration\$Framework\WindowsProgram"
+    $command = "& { Import-Module -Name '$module'; Invoke-Pester -Path '$PSScriptRoot' }"
+
+    switch ($Framework) {
+        "net6.0" {
+            exec { pwsh -c $command }
+        }
+
+        "net462" {
+            exec { powershell -Command $command }
+        }
+    }
+}
+
 task . Build, Pack
