@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <NoWarn>CA1416</NoWarn>
+    <NoWarn>$(NoWarn);CA1416</NoWarn>
     <TargetFrameworks>net6.0;net462</TargetFrameworks>
     <LangVersion>10.0</LangVersion>
   </PropertyGroup>
