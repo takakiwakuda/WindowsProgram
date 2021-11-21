@@ -4,6 +4,7 @@
     <NoWarn>$(NoWarn);CA1416</NoWarn>
     <TargetFrameworks>net6.0;net462</TargetFrameworks>
     <LangVersion>10.0</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
@@ -17,8 +18,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Using Include="System" />
+    <Using Include="Microsoft.Win32" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="WindowsProgram.format.ps1xml" CopyToOutputDirectory="PreserveNewest" />
     <None Include="WindowsProgram.psd1" CopyToOutputDirectory="PreserveNewest" />
     <None Include="WindowsProgram.psm1" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+
 </Project>

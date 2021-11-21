@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
 using System.Text.RegularExpressions;
-using Microsoft.Win32;
 
 namespace WindowsProgram
 {
@@ -31,13 +29,13 @@ namespace WindowsProgram
         private IEnumerable<WindowsProgramInfo> GetPrograms(RegistryHive hKey, RegistryView view)
         {
             using RegistryKey baseKey = RegistryKey.OpenBaseKey(hKey, view);
-            using RegistryKey uninstallKey = baseKey.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Uninstall", false);
+            using RegistryKey uninstallKey = OpenSubKey(baseKey, @"Software\Microsoft\Windows\CurrentVersion\Uninstall", false);
 
             foreach (string subKeyName in uninstallKey.GetSubKeyNames())
             {
-                using RegistryKey programKey = uninstallKey.OpenSubKey(subKeyName, false);
+                using RegistryKey programKey = OpenSubKey(uninstallKey, subKeyName, false);
 
-                if ((int)programKey.GetValue("SystemComponent", 0) == 1)
+                if ((int?)programKey.GetValue("SystemComponent", 0) == 1)
                 {
                     continue;
                 }
@@ -47,13 +45,13 @@ namespace WindowsProgram
                     continue;
                 }
 
-                string name = (string)programKey.GetValue("DisplayName", string.Empty);
+                string name = (string?)programKey.GetValue("DisplayName") ?? string.Empty;
                 if (name.Length == 0)
                 {
                     continue;
                 }
 
-                if (!Version.TryParse((string)programKey.GetValue("DisplayVersion"), out Version version))
+                if (!Version.TryParse((string?)programKey.GetValue("DisplayVersion"), out Version? version))
                 {
                     version = null;
                 }
@@ -62,7 +60,7 @@ namespace WindowsProgram
                 {
                     InstalledDate = GetInstalledDate(programKey),
                     Name = name,
-                    Publisher = (string)programKey.GetValue("Publisher"),
+                    Publisher = (string?)programKey.GetValue("Publisher"),
                     Size = (int?)programKey.GetValue("EstimatedSize"),
                     Version = version
                 };
@@ -71,7 +69,7 @@ namespace WindowsProgram
 
         private DateTime GetInstalledDate(RegistryKey key)
         {
-            string datetime = (string)key.GetValue("InstallDate");
+            string? datetime = (string?)key.GetValue("InstallDate");
             if (datetime == null || !Regex.IsMatch(datetime, "^[0-9]{8}$"))
             {
                 return NativeMethod.GetLastWriteTime(key);
@@ -92,18 +90,24 @@ namespace WindowsProgram
 
             return NativeMethod.GetLastWriteTime(key);
         }
+
+        private static RegistryKey OpenSubKey(RegistryKey key, string name, bool writable = false)
+        {
+            // The following code should be improved!
+            return key.OpenSubKey(name, writable) ?? throw new InvalidOperationException();
+        }
     }
 
     public class WindowsProgramInfo
     {
         public DateTime InstalledDate { get; internal set; }
 
-        public string Name { get; internal set; }
+        public string? Name { get; internal set; }
 
-        public string Publisher { get; internal set; }
+        public string? Publisher { get; internal set; }
 
         public int? Size { get; internal set; }
 
-        public Version Version { get; internal set; }
+        public Version? Version { get; internal set; }
     }
 }

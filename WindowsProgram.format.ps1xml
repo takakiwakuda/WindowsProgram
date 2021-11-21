@@ -2,10 +2,13 @@
 <Configuration>
   <ViewDefinitions>
     <View>
+
       <Name>WindowsProgram</Name>
+
       <ViewSelectedBy>
         <TypeName>WindowsProgram.WindowsProgramInfo</TypeName>
       </ViewSelectedBy>
+
       <TableControl>
         <TableHeaders>
           <TableColumnHeader>
@@ -24,10 +27,9 @@
             <Width>13</Width>
             <Alignment>Right</Alignment>
           </TableColumnHeader>
-          <TableColumnHeader>
-            <Width>20</Width>
-          </TableColumnHeader>
+          <TableColumnHeader />
         </TableHeaders>
+
         <TableRowEntries>
           <TableRowEntry>
             <TableColumnItems>
@@ -51,6 +53,7 @@
           </TableRowEntry>
         </TableRowEntries>
       </TableControl>
+
     </View>
   </ViewDefinitions>
 </Configuration>

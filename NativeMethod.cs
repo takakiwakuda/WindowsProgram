@@ -1,8 +1,6 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Text;
-using Microsoft.Win32;
 using Microsoft.Win32.SafeHandles;
 
 namespace WindowsProgram
@@ -14,7 +12,7 @@ namespace WindowsProgram
         [DllImport("advapi32.dll", CharSet = CharSet.Unicode)]
         private static extern int RegQueryInfoKey(
             SafeRegistryHandle hKey,
-            StringBuilder lpClass,
+            StringBuilder? lpClass,
             uint lpcchClass,
             IntPtr lpReserved,
             IntPtr lpcSubKeys,
