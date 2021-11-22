@@ -40,7 +40,7 @@ namespace WindowsProgram
                     continue;
                 }
 
-                if (programKey.GetValue("ParentKeyName") != null)
+                if (programKey.GetValue("ParentKeyName") is not null)
                 {
                     continue;
                 }
@@ -70,7 +70,7 @@ namespace WindowsProgram
         private DateTime GetInstalledDate(RegistryKey key)
         {
             string? datetime = (string?)key.GetValue("InstallDate");
-            if (datetime == null || !Regex.IsMatch(datetime, "^[0-9]{8}$"))
+            if (datetime is null || !Regex.IsMatch(datetime, "^[0-9]{8}$"))
             {
                 return NativeMethod.GetLastWriteTime(key);
             }
@@ -94,20 +94,26 @@ namespace WindowsProgram
         private static RegistryKey OpenSubKey(RegistryKey key, string name, bool writable = false)
         {
             // The following code should be improved!
-            return key.OpenSubKey(name, writable) ?? throw new InvalidOperationException();
+            RegistryKey? subKey = key.OpenSubKey(name, writable);
+            if (subKey is null)
+            {
+                throw new InvalidOperationException($"Cannot open registry '{key}\\{name}'.");
+            }
+
+            return subKey;
         }
     }
 
     public class WindowsProgramInfo
     {
-        public DateTime InstalledDate { get; internal set; }
+        public DateTime InstalledDate { get; init; }
 
-        public string? Name { get; internal set; }
+        public string? Name { get; init; }
 
-        public string? Publisher { get; internal set; }
+        public string? Publisher { get; init; }
 
-        public int? Size { get; internal set; }
+        public int? Size { get; init; }
 
-        public Version? Version { get; internal set; }
+        public Version? Version { get; init; }
     }
 }
