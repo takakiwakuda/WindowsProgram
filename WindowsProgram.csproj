@@ -1,10 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <NoWarn>$(NoWarn);CA1416</NoWarn>
+    <Product>GameRecorder</Product>
+    <Copyright>(c) Takaki Wakuda.</Copyright>
+
     <TargetFrameworks>net6.0;net462</TargetFrameworks>
     <LangVersion>10.0</LangVersion>
+    <NoWarn>CA1416</NoWarn>
+
     <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DisableImplicitNamespaceImports>true</DisableImplicitNamespaceImports>
+
+    <Deterministic>true</Deterministic>
+    <Features>strict</Features>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <Optimize>true</Optimize>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
@@ -15,11 +30,6 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="PowerShellStandard.Library" Version="5.1.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Using Include="System" />
-    <Using Include="Microsoft.Win32" />
   </ItemGroup>
 
   <ItemGroup>
