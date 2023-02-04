@@ -54,6 +54,11 @@ task BuildModule BuildWindowsProgram, {
     Copy-Item -LiteralPath $source\WindowsProgram.dll -Destination $destination
     Copy-Item -LiteralPath $source\WindowsProgram.format.ps1xml -Destination $destination
     Copy-Item -LiteralPath $source\WindowsProgram.psd1 -Destination $destination
+
+    if ($Framework -eq "net462") {
+        Copy-Item -LiteralPath $source\System.Memory.dll -Destination $destination
+        Copy-Item -LiteralPath $source\System.Runtime.CompilerServices.Unsafe.dll -Destination $destination
+    }
 }
 
 <#

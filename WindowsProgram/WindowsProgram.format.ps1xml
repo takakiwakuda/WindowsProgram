@@ -77,10 +77,28 @@
                 <PropertyName>Version</PropertyName>
               </ListItem>
               <ListItem>
+                <PropertyName>Comments</PropertyName>
+              </ListItem>
+              <ListItem>
                 <PropertyName>InstallLocation</PropertyName>
               </ListItem>
               <ListItem>
+                <PropertyName>InstallSource</PropertyName>
+              </ListItem>
+              <ListItem>
+                <PropertyName>ModifyPath</PropertyName>
+              </ListItem>
+              <ListItem>
                 <PropertyName>UninstallString</PropertyName>
+              </ListItem>
+              <ListItem>
+                <PropertyName>NoModify</PropertyName>
+              </ListItem>
+              <ListItem>
+                <PropertyName>NoRemove</PropertyName>
+              </ListItem>
+              <ListItem>
+                <PropertyName>NoRepair</PropertyName>
               </ListItem>
               <ListItem>
                 <PropertyName>HelpLink</PropertyName>

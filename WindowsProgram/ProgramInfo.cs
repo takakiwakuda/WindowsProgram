@@ -81,6 +81,19 @@ public sealed class ProgramInfo : IDisposable
         }
     }
 
+    /// <summary>Gets comments of the program.</summary>
+    /// <exception cref="ObjectDisposedException">
+    /// The current object was disposed.
+    /// </exception>
+    public string? Comments
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return _comments.Value;
+        }
+    }
+
     /// <summary>Gets a string representing the installation location of the program.</summary>
     /// <exception cref="ObjectDisposedException">
     /// The current object was disposed.
@@ -94,6 +107,32 @@ public sealed class ProgramInfo : IDisposable
         }
     }
 
+    /// <summary>Gets a string representing the installation source of the program.</summary>
+    /// <exception cref="ObjectDisposedException">
+    /// The current object was disposed.
+    /// </exception>
+    public string? InstallSource
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return _installSource.Value;
+        }
+    }
+
+    /// <summary>Gets a string representation of the command to modify the program.</summary>
+    /// <exception cref="ObjectDisposedException">
+    /// The current object was disposed.
+    /// </exception>
+    public string? ModifyPath
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return _modifyPath.Value;
+        }
+    }
+
     /// <summary>Gets a string to uninstall the program.</summary>
     /// <exception cref="ObjectDisposedException">
     /// The current object was disposed.
@@ -104,6 +143,45 @@ public sealed class ProgramInfo : IDisposable
         {
             ThrowIfDisposed();
             return _uninstallString.Value;
+        }
+    }
+
+    /// <summary>Gets a value that indicates whether the program can be modified.</summary>
+    /// <exception cref="ObjectDisposedException">
+    /// The current object was disposed.
+    /// </exception>
+    public bool NoModify
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return _noModify.Value;
+        }
+    }
+
+    /// <summary>Gets a value that indicates whether the program can be uninstalled.</summary>
+    /// <exception cref="ObjectDisposedException">
+    /// The current object was disposed.
+    /// </exception>
+    public bool NoRemove
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return _noRemove.Value;
+        }
+    }
+
+    /// <summary>Gets a value that indicates whether the program can be repaired.</summary>
+    /// <exception cref="ObjectDisposedException">
+    /// The current object was disposed.
+    /// </exception>
+    public bool NoRepair
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return _noRepair.Value;
         }
     }
 
@@ -167,9 +245,15 @@ public sealed class ProgramInfo : IDisposable
     private readonly Lazy<DateTime> _installDate;
     private readonly Lazy<int?> _size;
     private readonly Lazy<Version?> _version;
-    private readonly Lazy<Uri?> _helpLink;
+    private readonly Lazy<string?> _comments;
     private readonly Lazy<string?> _installLocation;
+    private readonly Lazy<string?> _installSource;
+    private readonly Lazy<string?> _modifyPath;
     private readonly Lazy<string?> _uninstallString;
+    private readonly Lazy<bool> _noModify;
+    private readonly Lazy<bool> _noRemove;
+    private readonly Lazy<bool> _noRepair;
+    private readonly Lazy<Uri?> _helpLink;
     private readonly Lazy<Uri?> _urlInfoAbout;
     private readonly Lazy<Uri?> _urlUpdateInfo;
 
@@ -192,10 +276,16 @@ public sealed class ProgramInfo : IDisposable
         _name = name;
 
         _publisher = new Lazy<string?>(() => (string?)_key.GetValue("Publisher"));
-        _uninstallString = new Lazy<string?>(() => (string?)_key.GetValue("UninstallString"));
+        _comments = new Lazy<string?>(() => (string?)_key.GetValue("Comments"));
         _installLocation = new Lazy<string?>(() => (string?)_key.GetValue("InstallLocation"));
+        _installSource = new Lazy<string?>(() => (string?)_key.GetValue("InstallSource"));
+        _modifyPath = new Lazy<string?>(() => (string?)_key.GetValue("ModifyPath"));
+        _uninstallString = new Lazy<string?>(() => (string?)_key.GetValue("UninstallString"));
         _installDate = new Lazy<DateTime>(GetInstallDate);
         _size = new Lazy<int?>(() => (int?)_key.GetValue("EstimatedSize"));
+        _noModify = new Lazy<bool>(() => (int)_key.GetValue("NoModify", 0) == 1);
+        _noRemove = new Lazy<bool>(() => (int)_key.GetValue("NoRemove", 0) == 1);
+        _noRepair = new Lazy<bool>(() => (int)_key.GetValue("NoRepair", 0) == 1);
 
         _version = new Lazy<Version?>(() =>
         {
