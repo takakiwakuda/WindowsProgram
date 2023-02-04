@@ -336,6 +336,13 @@ public sealed class ProgramInfo : IDisposable
                     continue;
                 }
 
+                // TODO I may want to support parents.
+                if (targetKey.GetValue("ParentKeyName") is not null)
+                {
+                    targetKey.Dispose();
+                    continue;
+                }
+
                 string? name = (string?)targetKey.GetValue("DisplayName");
                 if (name is null)
                 {
