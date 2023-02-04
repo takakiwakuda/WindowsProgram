@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Microsoft.Win32;
 
 namespace WindowsProgram;
@@ -9,6 +11,8 @@ namespace WindowsProgram;
 /// </summary>
 public sealed class ProgramInfo : IDisposable
 {
+    private const string UninstallKeyName = @"Software\Microsoft\Windows\CurrentVersion\Uninstall";
+
     /// <summary>Gets the name of the program.</summary>
     /// <remarks>This value is equal to DisplayName.</remarks>
     /// <exception cref="ObjectDisposedException">
@@ -177,7 +181,7 @@ public sealed class ProgramInfo : IDisposable
     /// <exception cref="ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.
     /// </exception>
-    internal ProgramInfo(string name, RegistryKey key)
+    private ProgramInfo(string name, RegistryKey key)
     {
         if (name is null)
         {
@@ -202,6 +206,58 @@ public sealed class ProgramInfo : IDisposable
         _helpLink = new Lazy<Uri?>(() => GetUri("HelpLink"));
         _urlInfoAbout = new Lazy<Uri?>(() => GetUri("URLInfoAbout"));
         _urlUpdateInfo = new Lazy<Uri?>(() => GetUri("URLUpdateInfo"));
+    }
+
+    /// <summary>
+    /// Returns programs on the local computer.
+    /// </summary>
+    /// <returns>An array of the <see cref="ProgramInfo"/>.</returns>
+    public static ProgramInfo[] GetProgramInfos()
+    {
+        List<ProgramInfo> programInfos = new();
+        programInfos.AddRange(GetProgramInfos(RegistryHive.CurrentUser, RegistryView.Default));
+        programInfos.AddRange(GetProgramInfos(RegistryHive.LocalMachine, RegistryView.Registry64));
+        programInfos.AddRange(GetProgramInfos(RegistryHive.LocalMachine, RegistryView.Registry32));
+
+        return programInfos.OrderBy(p => p.Name).ToArray();
+    }
+
+    /// <summary>
+    /// Returns programs from the specified registry.
+    /// </summary>
+    /// <param name="hKey">The registry hive to use.</param>
+    /// <param name="view">The registry hive to view.</param>
+    /// <returns>An array of the <see cref="ProgramInfo"/>.</returns>
+    private static ProgramInfo[] GetProgramInfos(RegistryHive hKey, RegistryView view)
+    {
+        List<ProgramInfo> programInfos = new();
+
+        using RegistryKey baseKey = RegistryKey.OpenBaseKey(hKey, view);
+        using RegistryKey uninstallKey = baseKey.OpenSubKey(UninstallKeyName, false)!;
+
+        foreach (string keyName in uninstallKey.GetSubKeyNames())
+        {
+            RegistryKey? targetKey = uninstallKey.OpenSubKey(keyName, false);
+            if (targetKey is not null)
+            {
+                if ((int)targetKey.GetValue("SystemComponent", 0) == 1)
+                {
+                    targetKey.Dispose();
+                    continue;
+                }
+
+                string? name = (string?)targetKey.GetValue("DisplayName");
+                if (name is null)
+                {
+                    targetKey.Dispose();
+                    continue;
+                }
+
+                programInfos.Add(new ProgramInfo(name, targetKey));
+            }
+        }
+
+        return programInfos.ToArray();
     }
 
     /// <summary>

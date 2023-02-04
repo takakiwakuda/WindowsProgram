@@ -3,16 +3,4 @@
         $programs = Get-WindowsProgram
         $programs | Should -BeOfType "WindowsProgram.ProgramInfo"
     }
-
-    It "Gets installed programs in the current user's scope" {
-        $programs = Get-WindowsProgram -Scope CurrentUser
-        $programs | Should -BeOfType "WindowsProgram.ProgramInfo"
-        $programs.RegistryKey.Name | Should -BeLike "HKEY_CURRENT_USER\*"
-    }
-
-    It "Gets installed programs in the machine's scope" {
-        $programs = Get-WindowsProgram -Scope AllUsers
-        $programs | Should -BeOfType "WindowsProgram.ProgramInfo"
-        $programs.RegistryKey.Name | Should -BeLike "HKEY_LOCAL_MACHINE\*"
-    }
 }
