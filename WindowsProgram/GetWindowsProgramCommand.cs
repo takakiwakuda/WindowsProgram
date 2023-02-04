@@ -32,7 +32,7 @@ public sealed class GetWindowsProgramCommand : PSCmdlet
                 WriteObject(EnumerateInstalledPrograms(RegistryHive.CurrentUser, RegistryView.Default), true);
                 break;
 
-            case ProgramScope.Machine:
+            case ProgramScope.AllUsers:
                 WriteObject(EnumerateInstalledPrograms(RegistryHive.LocalMachine, RegistryView.Registry64), true);
                 WriteObject(EnumerateInstalledPrograms(RegistryHive.LocalMachine, RegistryView.Registry32), true);
                 break;

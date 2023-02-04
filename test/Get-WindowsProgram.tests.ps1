@@ -11,7 +11,7 @@
     }
 
     It "Gets installed programs in the machine's scope" {
-        $programs = Get-WindowsProgram -Scope Machine
+        $programs = Get-WindowsProgram -Scope AllUsers
         $programs | Should -BeOfType "WindowsProgram.ProgramInfo"
         $programs.RegistryKey.Name | Should -BeLike "HKEY_LOCAL_MACHINE\*"
     }

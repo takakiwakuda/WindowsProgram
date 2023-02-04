@@ -18,5 +18,5 @@ public enum ProgramScope
     /// <summary>
     /// Specifies the local machine.
     /// </summary>
-    Machine
+    AllUsers
 }
