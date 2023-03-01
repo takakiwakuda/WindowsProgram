@@ -1,6 +1,5 @@
 ﻿using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
-using FILETIME = System.Runtime.InteropServices.ComTypes.FILETIME;
 
 namespace WindowsProgram;
 
@@ -20,7 +19,7 @@ internal static partial class Advapi32
         out uint lpcbMaxValueNameLen,
         out uint lpcbMaxValueLen,
         out nint lpcbSecurityDescriptor,
-        out FILETIME lpftLastWriteTime);
+        out Kernetl32.FILETIME lpftLastWriteTime);
 #else
     [DllImport(nameof(Advapi32), EntryPoint = "RegQueryInfoKeyW", SetLastError = true)]
     internal static extern int RegQueryInfoKey(
@@ -35,6 +34,6 @@ internal static partial class Advapi32
         out uint lpcbMaxValueNameLen,
         out uint lpcbMaxValueLen,
         out nint lpcbSecurityDescriptor,
-        out FILETIME lpftLastWriteTime);
+        out Kernetl32.FILETIME lpftLastWriteTime);
 #endif
 }
